@@ -7,19 +7,18 @@ const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000,
 }) // 创建一个axios的实例
+//请求拦截器
 service.interceptors.request.use(
   // 每次请求的网络配置
   (config) => {
-    // const { data } = config.data;
-    // console.log(data);
     //获取token
     const token = store.state.user.token
     console.log(token)
+    //如果有token 说明是登录之后，才给headers加token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    // console.log(config);
-    return config
+    return config //config 需要return
   },
   // 请求失败的fanhui
   (error) => {

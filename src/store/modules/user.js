@@ -1,4 +1,4 @@
-import { login, getUserInfo } from '@/api'
+import { login, getUserInfo, getUserDetail } from '@/api'
 export default {
   namespaced: true,
   state: {
@@ -24,8 +24,11 @@ export default {
     },
     //获取用户信息
     async getUserInfo(context) {
-      const res = await getUserInfo()
-      context.commit('setUserInfo', res)
+      //q请求接口
+      const userBase = await getUserInfo()
+      const userDetail = await getUserDetail(userBase.userId)
+      //榜用户信息方法一个对象里
+      context.commit('setUserInfo', { ...userBase, ...userDetail })
     },
   },
   getters: {},

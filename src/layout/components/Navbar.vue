@@ -6,7 +6,7 @@
       @toggleClick="toggleSideBar"
     />
     <div class="app-breadcrumb">
-      江苏传智播客教育科技股份有限公司
+      {{ $store.state.user.userInfo.companyName }}
       <span class="breadBtn">体验版</span>
     </div>
     <!-- <breadcrumb class="breadcrumb-container" /> -->
@@ -14,8 +14,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
-          <span>用户名</span>
+          <img
+            :src="$store.state.user.userInfo.staffPhoto"
+            class="user-avatar"
+          />
+          <span>{{ $store.state.user.userInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -138,7 +141,9 @@ export default {
         display: flex;
         align-items: center;
         color: #ffffff;
-
+        span {
+          cursor: pointer;
+        }
         .user-avatar {
           cursor: pointer;
           width: 40px;
