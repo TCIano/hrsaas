@@ -12,3 +12,14 @@ export const login = (data) => {
     data,
   })
 }
+
+/**
+ *  获取用户信息
+ * @returns Promise
+ */
+export const getUserInfo = () => {
+  return request({
+    method: 'POST',
+    url: '/sys/profile',
+  })
+}
