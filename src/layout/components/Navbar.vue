@@ -14,9 +14,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
+          <!-- 图片加载失败处理，让他 显示默认 图片 -->
           <img
             :src="$store.state.user.userInfo.staffPhoto"
             class="user-avatar"
+            v-imgError="defaultImg"
           />
           <span>{{ $store.state.user.userInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
@@ -39,8 +41,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+//使用本地 默认图片修稿图片加载失败问题
+import defaultImg from '@/assets/common/head.jpg'
 export default {
+  data() {
+    return {
+      //图片加载失败默认地址
+      defaultImg:
+        defaultImg ||
+        'https://img1.baidu.com/it/u=1966616150,2146512490&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1659632400&t=32c45dabee23abf100ad46bb6e2115df',
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -54,7 +65,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$store.state.user.token = ''
+      // this.$store.state.user.token = ''
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
   },

@@ -1,4 +1,5 @@
 import { login, getUserInfo, getUserDetail } from '@/api'
+import { setTokenTime } from '@/utils/auth'
 export default {
   namespaced: true,
   state: {
@@ -21,6 +22,8 @@ export default {
       console.log(res)
       //在响应拦截器中已经配置，错误拦截
       commit('setToken', res)
+      //获取登录时间戳
+      setTokenTime()
     },
     //获取用户信息
     async getUserInfo(context) {
@@ -29,6 +32,12 @@ export default {
       const userDetail = await getUserDetail(userBase.userId)
       //榜用户信息方法一个对象里
       context.commit('setUserInfo', { ...userBase, ...userDetail })
+    },
+    //退出
+    logout({ commit }) {
+      // 把内容置空
+      commit('setToken', '')
+      commit('setUserInfo', '')
     },
   },
   getters: {},
