@@ -16,7 +16,7 @@
         <div class="avatar-wrapper">
           <!-- 图片加载失败处理，让他 显示默认 图片 -->
           <img
-            :src="$store.state.user.userInfo.staffPhoto"
+            :src="$store.state.user.userInfo.staffPhoto || defaultImg"
             class="user-avatar"
             v-imgError="defaultImg"
           />

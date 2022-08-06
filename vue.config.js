@@ -41,6 +41,8 @@ module.exports = {
     proxy: {
       //拦截浏览器带有api地址的请求，
       '/api': {
+        // http://ihrm-java.itheima.net/'
+        // target: 'http://ihrm.itheima.net/',
         target: 'http://ihrm-java.itheima.net/',
       },
     },

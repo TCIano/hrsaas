@@ -1,44 +1,71 @@
 <template>
-  <el-card class="tree-card">
-    <!-- 用了一个行列布局 -->
-    <el-row
-      type="flex"
-      justify="space-between"
-      align="middle"
-      style="height: 40px"
-    >
-      <el-col>
-        <span>江苏传智播客教育科技股份有限公司</span>
-      </el-col>
-      <el-col :span="4">
-        <el-row type="flex" justify="end">
-          <!-- 两个内容 -->
-          <el-col>负责人</el-col>
-          <el-col>
-            <!-- 下拉菜单 element -->
-            <el-dropdown>
-              <span> 操作<i class="el-icon-arrow-down" /> </span>
-              <!-- 下拉菜单 -->
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>添加子部门</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
-  </el-card>
+  <div class="dashboard-container">
+    <div class="app-container">
+      <!-- 实现页面的基本布局 -->
+      <el-card class="tree-card">
+        <!-- 用了一个行列布局 -->
+        <!-- 缺少treeNode -->
+        <tree-tools :treeNode="company" :isRoot="true" @add="addDept" />
+
+        <el-tree :data="departs" :props="defaultProps" default-expand-all>
+          <!-- scope-scope 是 tree组件传给每个节点的插槽的内容的数据 -->
+          <!-- 顺序一定是 执行slot-scope的赋值 才去执行 props的传值 -->
+          <!-- 自定义树节点的内容，参数为 { node, data,当前el-tree中data行数据 } -->
+          <template v-slot="{ data }">
+            <tree-tools :treeNode="data" @remove="getDepts" @add="addDept" />
+          </template>
+        </el-tree>
+      </el-card>
+    </div>
+    <!-- 对话框 -->
+    <!-- 通过点sync子组件修改 弹出关闭数据，传递给父组件 -->
+    <add-dept
+      :visiable.sync="dialogVisible"
+      :currentNode="currentNode"
+      @updateList="getDepts"
+    ></add-dept>
+  </div>
 </template>
 
 <script>
+import AddDept from './components/add-dept.vue'
+import { getDeptsApi } from '@/api'
+import treeTools from './components/tree-tools.vue'
+import { departmentList } from '@/utils'
 export default {
+  components: {
+    treeTools,
+    AddDept,
+  },
   data() {
-    return {}
+    return {
+      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
+      defaultProps: {
+        label: 'name',
+      },
+      departs: [],
+      dialogVisible: false,
+      currentNode: {}, //当前部门
+    }
   },
 
-  created() {},
+  created() {
+    this.getDepts()
+  },
 
-  methods: {},
+  methods: {
+    async getDepts() {
+      const res = await getDeptsApi()
+      console.log(res)
+      //把拿到的列表处理为树形结构
+      this.departs = departmentList(res.depts, '')
+    },
+    //添加子部门
+    addDept(val) {
+      this.dialogVisible = true
+      this.currentNode = val
+    },
+  },
 }
 </script>
 
