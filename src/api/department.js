@@ -41,3 +41,27 @@ export const addDeptApi = (data) => {
     data,
   })
 }
+
+/**
+ *  根据 id查找部门详情
+ * @param {String} id 部门id
+ * @returns
+ */
+export const getDeptByIdApi = (id) => {
+  return request({
+    url: '/company/department/' + id,
+  })
+}
+
+/**
+ *  编辑部门详情
+ * @param {String} data
+ * @returns
+ */
+export const editDeptByIdApi = (data) => {
+  return request({
+    method: 'PUT',
+    url: '/company/department/' + data.id,
+    data,
+  })
+}

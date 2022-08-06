@@ -25,7 +25,9 @@
               >
               <!-- 隐藏头部标题的部分操作 -->
               <template v-if="!isRoot">
-                <el-dropdown-item>编辑部门</el-dropdown-item>
+                <el-dropdown-item @click.native="$emit('edit', treeNode)"
+                  >编辑部门</el-dropdown-item
+                >
                 <el-dropdown-item @click.native="onRemove"
                   >删除部门</el-dropdown-item
                 >
@@ -66,10 +68,12 @@ export default {
         //获取当前部门id
         console.log(this.treeNode.id)
         await delDeptsApi(this.treeNode.id)
-        this.$message.success('删除成功')
         this.$emit('remove')
         console.log(11)
-      } catch (error) {}
+        this.$message.success('删除数据成功')
+      } catch (error) {
+        this.$message.error('删除数据失败')
+      }
     },
   },
 }
