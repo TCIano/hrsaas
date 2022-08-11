@@ -124,7 +124,7 @@ export default {
           },
         ],
         manager: [
-          { required: true, message: '请输入部门名字', trigger: 'change' },
+          { required: true, message: '请输入部门名字', trigger: 'blur' },
         ],
         introduce: [
           { required: true, message: '请输入部门名字', trigger: 'blur' },
