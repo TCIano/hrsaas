@@ -2,11 +2,12 @@
 import router from '@/router'
 import store from '@/store'
 const whiteList = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const token = store.state.user.token
   //获取用户信息
   if (token) {
-    store.dispatch('user/getUserInfo')
+    //等待
+    await store.dispatch('user/getUserInfo')
     //1.登录
     //是否进入登录页
     if (to.path === '/login') {

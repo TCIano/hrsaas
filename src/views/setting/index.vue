@@ -7,19 +7,27 @@
           <el-tab-pane label="角色管理">
             <!-- 新增角色按钮 -->
             <el-row style="height: 60px">
-              <el-button icon="el-icon-plus" size="small" type="primary"
+              <el-button
+                icon="el-icon-plus"
+                size="small"
+                type="primary"
+                @click="addDialogVisible = true"
                 >新增角色</el-button
               >
             </el-row>
             <!-- 表格 -->
-            <el-table border="">
-              <el-table-column label="序号" width="120" />
-              <el-table-column label="角色名称" width="240" />
-              <el-table-column label="描述" />
+            <el-table border="" :data="tableDate">
+              <el-table-column label="序号" width="120" type="index" />
+              <el-table-column label="角色名称" width="240" prop="name" />
+              <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template slot-scope="scope">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="danger" @click="delRole(scope)"
+                    >删除</el-button
+                  >
+                </template>
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
@@ -30,7 +38,16 @@
               style="height: 60px"
             >
               <!-- 分页组件 -->
-              <el-pagination layout="prev,pager,next" />
+              <el-pagination
+                :page-sizes="[3, 5, 10, 15, 20]"
+                layout="sizes,prev,pager,next"
+                :total="total"
+                :page-size="pageSize"
+                @current-change="currentChange"
+                @size-change="sizeChange"
+                @prev-click="prevClick"
+                @next-click="nextClick"
+              />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="公司信息">
@@ -42,13 +59,25 @@
             />
             <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="公司名称">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  disabled
+                  style="width: 400px"
+                  v-model="companyInfo.name"
+                />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  disabled
+                  style="width: 400px"
+                  v-model="companyInfo.companyAddress"
+                />
               </el-form-item>
               <el-form-item label="邮箱">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  disabled
+                  style="width: 400px"
+                  v-model="companyInfo.mailbox"
+                />
               </el-form-item>
               <el-form-item label="备注">
                 <el-input
@@ -56,6 +85,7 @@
                   :rows="3"
                   disabled
                   style="width: 400px"
+                  v-model="companyInfo.remarks"
                 />
               </el-form-item>
             </el-form>
@@ -63,18 +93,123 @@
         </el-tabs>
       </el-card>
     </div>
+
+    <!-- 对话框组件 -->
+    <el-dialog
+      title="新增角色"
+      :visible.sync="addDialogVisible"
+      width="50%"
+      @click="dialogClose"
+    >
+      <el-form
+        :model="addRolesForm"
+        :rules="rules"
+        label-width="100px"
+        ref="form"
+      >
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="addRolesForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" prop="description">
+          <el-input v-model="addRolesForm.description"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-button @click="onCancel">取 消</el-button>
+      <el-button type="primary" @click="onAddRoles">确 定</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { addRolesApi, delRolesApi, getRolesApi } from '@/api/roles'
+import { getCompanyInfoApi } from '@/api'
+
 export default {
   data() {
-    return {}
+    return {
+      tableDate: [],
+      total: 0,
+      pageSize: 2,
+      page: 1,
+      addDialogVisible: false, //新增弹层
+      addRolesForm: {
+        name: '',
+        description: '',
+      },
+      rules: {
+        name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+      },
+      companyInfo: {},
+    }
   },
 
-  created() {},
+  created() {
+    this.getRoles()
+    this.geComInfo()
+  },
 
-  methods: {},
+  methods: {
+    async getRoles() {
+      const { rows, total } = await getRolesApi({
+        page: this.page,
+        pagesize: this.pageSize,
+      })
+      this.tableDate = rows
+      this.total = total
+    },
+    //改变页数
+    currentChange(val) {
+      this.page = val
+      this.getRoles()
+    },
+    //改变每次条数
+    sizeChange(val) {
+      this.pageSize = val
+      this.getRoles()
+    },
+    //下一页上一页
+    prevClick() {
+      this.page + 1
+      this.getRoles()
+    },
+    nextClick(val) {
+      this.page - 1
+      this.getRoles()
+    },
+    //取消按钮
+    onCancel() {
+      this.addDialogVisible = false
+    },
+    //关闭弹窗
+    dialogClose() {
+      //重新校验表单
+      this.$refs.form.resetFields()
+      this.addRolesForm.description = ''
+    },
+    //添加角色
+    async onAddRoles() {
+      await this.$refs.form.validate()
+      await addRolesApi(this.addRolesForm)
+      this.$message.success('添加成功')
+      this.addDialogVisible = false
+      this.getRoles()
+    },
+    //删除角色
+    async delRole(scope) {
+      await delRolesApi(scope.row.id)
+      this.$message.success('删除成功')
+      this.getRoles()
+    },
+
+    //获取公司信息
+    async geComInfo() {
+      const res = await getCompanyInfoApi(
+        this.$store.state.user.userInfo.companyId,
+      )
+      console.log(res)
+      this.companyInfo = res
+    },
+  },
 }
 </script>
 

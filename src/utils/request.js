@@ -23,7 +23,6 @@ service.interceptors.request.use(
   async (config) => {
     //获取token
     const token = store.state.user.token
-    console.log(token)
     //如果有token 说明是登录之后，才给headers加token
     if (token) {
       //登录之后判断是否token过期，主动处理token过期
@@ -48,7 +47,6 @@ service.interceptors.request.use(
 ) // 请求拦截器
 service.interceptors.response.use(
   (response) => {
-    console.log(response)
     //成功
     const { data, message, success } = response.data
     if (success) {
