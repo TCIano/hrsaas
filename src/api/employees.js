@@ -21,3 +21,38 @@ export const getEmployeesInfoApi = (params) => {
     params,
   })
 }
+
+/**
+ * 删除员工接口
+ * ****/
+
+export function delEmployeeApi(id) {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'delete',
+  })
+}
+
+/** **
+ *  新增员工的接口
+ * **/
+export function addEmployeeApi(data) {
+  return request({
+    method: 'post',
+    url: '/sys/user',
+    data,
+  })
+}
+
+/**
+ *
+ * @param {*} data 员工数组
+ * @returns
+ */
+export function importEmployees(data) {
+  return request({
+    method: 'POST',
+    url: '/sys/user/batch',
+    data,
+  })
+}

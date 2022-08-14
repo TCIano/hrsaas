@@ -45,6 +45,7 @@ import attendancesRouter from './modules/attendances.js'
 import salarysRouter from './modules/salarys.js'
 import settingRouter from './modules/setting.js'
 import socialRouter from './modules/social.js'
+import importModule from './modules/import.js'
 //动态路由
 export const asyncRoutes = [
   departmentsRouter,
@@ -55,6 +56,7 @@ export const asyncRoutes = [
   salarysRouter,
   settingRouter,
   socialRouter,
+  importModule,
 ]
 const createRouter = () =>
   new Router({
