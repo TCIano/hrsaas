@@ -36,7 +36,9 @@
                   height: 100px;
                   border-radius: 50%;
                   padding: 10px;
+                  cursor: pointer;
                 "
+                @click="showErCodeDia(row.staffPhoto)"
               />
             </template>
           </el-table-column>
@@ -103,10 +105,16 @@
       :visible.sync="showAddDialog"
       @add-success="getEmployeesList"
     ></add-employee>
+
+    <!-- 头像二维码弹层 -->
+    <el-dialog title="头像二维码" :visible.sync="showErCode">
+      <canvas id="canvas"></canvas>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import QRCode from 'qrcode'
 import addEmployee from './components/add-employee.vue'
 //引入映射
 import employees from '@/constant/employees'
@@ -122,6 +130,7 @@ export default {
       },
       total: 0,
       showAddDialog: false,
+      showErCode: false,
     }
   },
   components: {
@@ -143,7 +152,7 @@ export default {
     },
     //过滤聘用形式
     formatformOfEmployment(row, column, cellValue, index) {
-      console.log(typeof cellValue)
+      // console.log(typeof cellValue)
       //通过映处理数据
       const findItem = hireType.find((item) => item.id == cellValue)
       // console.log(findItem)
@@ -195,6 +204,18 @@ export default {
         filename: '员工列表', //非必填
         autoWidth: true, //非必填
         bookType: 'xlsx', //非必填
+        //
+      })
+    },
+    showErCodeDia(havePhoto) {
+      if (!havePhoto) {
+        return this.$message.warning('当前用户没有头像，请添加头像')
+      }
+      this.showErCode = true
+      this.$nextTick(() => {
+        const canvas = document.getElementById('canvas')
+        //图片转为二维码
+        QRCode.toCanvas(canvas, havePhoto)
       })
     },
   },
