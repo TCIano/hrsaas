@@ -1,6 +1,7 @@
 import PageTools from '@/components/PageTools'
 import UploadExcel from '@/components/UploadExcel'
-const components = [PageTools, UploadExcel]
+import UploadImg from '@/components/UploadImg'
+const components = [PageTools, UploadExcel, UploadImg]
 export default {
   install(Vue) {
     //遍历注册自定义组件

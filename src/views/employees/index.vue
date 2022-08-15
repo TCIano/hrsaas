@@ -65,7 +65,12 @@
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="{ row }">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="$router.push('/employees/detail/' + row.id)"
+                >查看</el-button
+              >
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -138,9 +143,9 @@ export default {
     },
     //过滤聘用形式
     formatformOfEmployment(row, column, cellValue, index) {
-      console.log(cellValue)
+      console.log(typeof cellValue)
       //通过映处理数据
-      const findItem = hireType.find((item) => item.id === cellValue)
+      const findItem = hireType.find((item) => item.id == cellValue)
       // console.log(findItem)
       return findItem ? findItem.value : '未知'
     },
@@ -174,7 +179,7 @@ export default {
         return header.map((header) => {
           if (header === '聘用形式') {
             const findItem = hireType.find(
-              (hire) => hire.id === item[exportExcelMapPath[header]],
+              (hire) => hire.id == item[exportExcelMapPath[header]],
             )
             return findItem ? findItem.value : '未知'
           } else {
