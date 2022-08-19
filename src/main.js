@@ -14,7 +14,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import Print from 'vue-print-nb'
+Vue.use(Print)
 //引入全局自定义组件
 import components from '@/components'
 //使用全局组件

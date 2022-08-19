@@ -14,5 +14,10 @@ export default {
       // meta: { title: '员工', icon: 'people' },
       hidden: true,
     },
+    {
+      path: 'print/:id',
+      component: () => import('@/views/employees/print.vue'),
+      hidden: true,
+    },
   ],
 }
