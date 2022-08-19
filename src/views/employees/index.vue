@@ -76,7 +76,9 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="showRoleDia = true"
+                >角色</el-button
+              >
               <el-button type="text" size="small" @click="delEmployee(row.id)"
                 >删除</el-button
               >
@@ -110,10 +112,14 @@
     <el-dialog title="头像二维码" :visible.sync="showErCode">
       <canvas id="canvas"></canvas>
     </el-dialog>
+
+    <!-- 角色分配 -->
+    <assign-role :showRoleDia="showRoleDia" />
   </div>
 </template>
 
 <script>
+import assignRole from './components/assign-role.vue'
 import QRCode from 'qrcode'
 import addEmployee from './components/add-employee.vue'
 //引入映射
@@ -123,6 +129,7 @@ import { delEmployeeApi, getEmployeesInfoApi } from '@/api'
 export default {
   data() {
     return {
+      showRoleDia: false, //角色弹出层
       employees: [], //员工列表
       pages: {
         page: 1,
@@ -135,6 +142,7 @@ export default {
   },
   components: {
     addEmployee,
+    assignRole,
   },
   created() {
     this.getEmployeesList()
