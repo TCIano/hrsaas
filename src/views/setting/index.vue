@@ -22,7 +22,12 @@
               <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button
+                    size="small"
+                    type="success"
+                    @click="assignPermission(scope)"
+                    >分配权限</el-button
+                  >
                   <el-button size="small" type="primary">编辑</el-button>
                   <el-button size="small" type="danger" @click="delRole(scope)"
                     >删除</el-button
@@ -117,12 +122,41 @@
       <el-button @click="onCancel">取 消</el-button>
       <el-button type="primary" @click="onAddRoles">确 定</el-button>
     </el-dialog>
+
+    <!-- 权限对话框 -->
+    <el-dialog
+      title="分配权限"
+      :visible.sync="showPermission"
+      destroy-on-close
+      @close="onClose"
+    >
+      <el-tree
+        :data="PermissionList"
+        :props="{ label: 'name' }"
+        default-expand-all
+        show-checkbox
+        node-key="id"
+        :default-checked-keys="selectCheckTree"
+        ref="treePer"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showPermission = false">取 消</el-button>
+        <el-button type="primary" @click="onSaveRight">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { addRolesApi, delRolesApi, getRolesApi } from '@/api/roles'
-import { getCompanyInfoApi } from '@/api'
+import {
+  addRolesApi,
+  assignPermApi,
+  delRolesApi,
+  getRolesApi,
+  getRolesInfo,
+} from '@/api/roles'
+import { getCompanyInfoApi, getPermissionListApi, getRolesInfoApi } from '@/api'
+import { departmentList } from '@/utils'
 
 export default {
   data() {
@@ -140,12 +174,17 @@ export default {
         name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
       },
       companyInfo: {},
+      showPermission: false,
+      PermissionList: [], //列表
+      selectCheckTree: [], //默认选中的权限
+      roleId: '', //当前角色id
     }
   },
 
   created() {
     this.getRoles()
     this.geComInfo()
+    this.getPermissionList()
   },
 
   methods: {
@@ -208,6 +247,39 @@ export default {
       )
       console.log(res)
       this.companyInfo = res
+    },
+    //打开分配权限弹框
+    async assignPermission(scope) {
+      //保存当前角色id
+      this.roleId = scope.row.id
+      console.log(scope)
+      this.showPermission = true
+      //获取元工权限
+      const res = await getRolesInfoApi(scope.row.id)
+      // console.log(res.permIds)
+      this.selectCheckTree = res.permIds
+    },
+    //获取权限
+    async getPermissionList() {
+      const res = await getPermissionListApi()
+      // console.log(res)
+      const treePermission = departmentList(res, '0')
+      this.PermissionList = treePermission
+    },
+    //关闭弹层，清除清除默认权限
+    onClose() {
+      //清除默认选中，需要先销毁当前的组件里面内容
+      this.selectCheckTree = []
+    },
+    //保存修改的权限
+    async onSaveRight() {
+      // console.log(this.$refs.treePer.getCheckedKeys())
+      await assignPermApi({
+        id: this.roleId,
+        permIds: this.$refs.treePer.getCheckedKeys(),
+      })
+      this.showPermission = false
+      this.$message.success('权限分配成功')
     },
   },
 }

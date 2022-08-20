@@ -1,4 +1,5 @@
 import { login, getUserInfo, getUserDetail } from '@/api'
+import { resetRouter } from '@/router'
 import { setTokenTime } from '@/utils/auth'
 export default {
   namespaced: true,
@@ -29,15 +30,23 @@ export default {
     async getUserInfo(context) {
       //q请求接口
       const userBase = await getUserInfo()
+      //拿到用户基本信息里面的用户id
       const userDetail = await getUserDetail(userBase.userId)
       //榜用户信息方法一个对象里
       context.commit('setUserInfo', { ...userBase, ...userDetail })
+      //传递用户信息
+      return userBase
     },
     //退出
     logout({ commit }) {
       // 把内容置空
       commit('setToken', '')
       commit('setUserInfo', '')
+      //退出重置路由
+      resetRouter()
+      //清除vuex 里面的路由规则
+      //{root :true} 拿到的是全局的commit
+      commit('permission/setRoutes', [], { root: true })
     },
   },
   getters: {},

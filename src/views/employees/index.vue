@@ -76,7 +76,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small" @click="showRoleDia = true"
+              <el-button type="text" size="small" @click="getRoles(row.id)"
                 >角色</el-button
               >
               <el-button type="text" size="small" @click="delEmployee(row.id)"
@@ -114,7 +114,10 @@
     </el-dialog>
 
     <!-- 角色分配 -->
-    <assign-role :showRoleDia="showRoleDia" />
+    <assign-role
+      :showRoleDia.sync="showRoleDia"
+      :currentEmployeeId="currentEmployeeId"
+    />
   </div>
 </template>
 
@@ -138,6 +141,7 @@ export default {
       total: 0,
       showAddDialog: false,
       showErCode: false,
+      currentEmployeeId: '', //当选选中员工id,
     }
   },
   components: {
@@ -225,6 +229,12 @@ export default {
         //图片转为二维码
         QRCode.toCanvas(canvas, havePhoto)
       })
+    },
+    //获取角色信息
+    getRoles(id) {
+      this.showRoleDia = true
+      //获取当前员工id
+      this.currentEmployeeId = id
     },
   },
 }

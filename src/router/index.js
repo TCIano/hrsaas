@@ -62,7 +62,7 @@ const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
-    routes: [...constantRoutes, ...asyncRoutes],
+    routes: [...constantRoutes], //静态路由
   })
 
 const router = createRouter()

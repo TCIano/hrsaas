@@ -44,7 +44,7 @@ service.interceptors.request.use(
   (error) => {
     return Promise.reject(error)
   },
-) // 请求拦截器
+) // 响应拦截器
 service.interceptors.response.use(
   (response) => {
     //成功
