@@ -4,11 +4,15 @@ export default {
   state: {
     routes: [], //因为侧边栏自带的路由规则只包含静态的路由，动态路由需要自己维护
     //因此自己维护一个包含静态和动态的路由
+    points: [], //按钮权限
   },
   mutations: {
     setRoutes(state, payload) {
       //把静态 动态路由都存起来
       state.routes = [...constantRoutes, ...payload]
+    },
+    setPoint(state, payload) {
+      state.points = payload
     },
   },
   actions: {
@@ -29,6 +33,10 @@ export default {
         ...routes,
         { path: '*', redirect: '/404', hidden: true },
       ])
+    },
+    //按钮权限
+    setPointAction({ commit }, roles) {
+      commit('setPoint', roles.points)
     },
   },
 }

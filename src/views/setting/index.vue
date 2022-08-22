@@ -28,8 +28,23 @@
                     @click="assignPermission(scope)"
                     >分配权限</el-button
                   >
-                  <el-button size="small" type="primary">编辑</el-button>
-                  <el-button size="small" type="danger" @click="delRole(scope)"
+
+                  <!-- v-if="isHasBtnPermission(point.roles.edit)" -->
+
+                  <el-button
+                    size="small"
+                    type="primary"
+                    v-isHasBtnPermission="point.roles.edit"
+                    >编辑</el-button
+                  >
+
+                  <!-- v-if="isHasBtnPermission(point.roles.del)" -->
+
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="delRole(scope)"
+                    v-isHasBtnPermission="point.roles.del"
                     >删除</el-button
                   >
                 </template>
@@ -157,8 +172,9 @@ import {
 } from '@/api/roles'
 import { getCompanyInfoApi, getPermissionListApi, getRolesInfoApi } from '@/api'
 import { departmentList } from '@/utils'
-
+import MixinsPremission from '@/Mixins/permisson'
 export default {
+  mixins: [MixinsPremission],
   data() {
     return {
       tableDate: [],

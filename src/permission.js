@@ -10,9 +10,12 @@ router.beforeEach(async (to, from, next) => {
     if (!store.state.user.userInfo.userId) {
       //拿到h获取到的用户信息里面的 当前用户的权限
       const res = await store.dispatch('user/getUserInfo')
+      console.log(res)
       //动态权限处理
       //进行用户的权限处理，把当前用户的路由权限传递给vuex进行过滤
       await store.dispatch('permission/filterRoutes', res.roles)
+      //存储按钮权限
+      await store.dispatch('permission/setPointAction', res.roles)
       //当处理完成自己维护的路由之后进行下一步跳转
       //防止刷新之后丢失页面，重新触发路由守卫
       next(to.path)

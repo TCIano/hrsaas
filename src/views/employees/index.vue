@@ -10,12 +10,21 @@
             size="small"
             type="warning"
             @click="$router.push('/import')"
+            v-if="isHasBtnPermission(point.employees.import)"
             >导入</el-button
           >
-          <el-button size="small" type="danger" @click="exportExcel"
+          <el-button
+            size="small"
+            type="danger"
+            @click="exportExcel"
+            v-if="isHasBtnPermission(point.employees.export)"
             >导出</el-button
           >
-          <el-button size="small" type="primary" @click="addEmployee"
+          <el-button
+            size="small"
+            type="primary"
+            @click="addEmployee"
+            v-if="isHasBtnPermission(point.employees.add)"
             >新增员工</el-button
           >
         </template>
@@ -79,7 +88,11 @@
               <el-button type="text" size="small" @click="getRoles(row.id)"
                 >角色</el-button
               >
-              <el-button type="text" size="small" @click="delEmployee(row.id)"
+              <el-button
+                type="text"
+                size="small"
+                @click="delEmployee(row.id)"
+                v-if="isHasBtnPermission(point.employees.del)"
                 >删除</el-button
               >
             </template>
@@ -122,6 +135,7 @@
 </template>
 
 <script>
+import MixinsPermission from '@/Mixins/permisson'
 import assignRole from './components/assign-role.vue'
 import QRCode from 'qrcode'
 import addEmployee from './components/add-employee.vue'
@@ -130,6 +144,7 @@ import employees from '@/constant/employees'
 const { exportExcelMapPath, hireType } = employees
 import { delEmployeeApi, getEmployeesInfoApi } from '@/api'
 export default {
+  mixins: [MixinsPermission],
   data() {
     return {
       showRoleDia: false, //角色弹出层
