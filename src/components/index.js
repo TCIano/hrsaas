@@ -1,7 +1,19 @@
 import PageTools from '@/components/PageTools'
 import UploadExcel from '@/components/UploadExcel'
 import UploadImg from '@/components/UploadImg'
-const components = [PageTools, UploadExcel, UploadImg]
+import Calendar from '@/components/Calendar'
+import fullScreen from '@/components/fullScreen'
+import SvgIcon from '@/components/SvgIcon'
+import ToggleLang from '@/components/ToggleLang'
+const components = [
+  PageTools,
+  UploadExcel,
+  UploadImg,
+  Calendar,
+  fullScreen,
+  SvgIcon,
+  ToggleLang,
+]
 export default {
   install(Vue) {
     //遍历注册自定义组件

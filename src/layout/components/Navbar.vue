@@ -12,11 +12,15 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <!-- {{ $t('hello') }}
+      {{ $t('message.hello') }} -->
+      <ToggleLang />
+      <FullScreen></FullScreen>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <!-- 图片加载失败处理，让他 显示默认 图片 -->
           <img
-            :src="$store.state.user.userInfo.staffPhoto || defaultImg"
+            :src="$store.getters.avatar || defaultImg"
             class="user-avatar"
             v-imgError="defaultImg"
           />
@@ -43,6 +47,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 //使用本地 默认图片修稿图片加载失败问题
 import defaultImg from '@/assets/common/head.jpg'
+import FullScreen from '@/components/fullScreen/index.vue'
 export default {
   data() {
     return {
@@ -55,6 +60,7 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
+    FullScreen,
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar']),
@@ -121,7 +127,8 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
+    // justify-content: space-between;
     &:focus {
       outline: none;
     }
