@@ -163,6 +163,7 @@
 </template>
 
 <script>
+import point from '@/constant/permission'
 import {
   addRolesApi,
   assignPermApi,
@@ -177,6 +178,7 @@ export default {
   mixins: [MixinsPremission],
   data() {
     return {
+      point,
       tableDate: [],
       total: 0,
       pageSize: 2,

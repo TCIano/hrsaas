@@ -135,6 +135,8 @@
 </template>
 
 <script>
+import point from '@/constant/permission'
+
 import MixinsPermission from '@/Mixins/permisson'
 import assignRole from './components/assign-role.vue'
 import QRCode from 'qrcode'
@@ -147,6 +149,7 @@ export default {
   mixins: [MixinsPermission],
   data() {
     return {
+      point,
       showRoleDia: false, //角色弹出层
       employees: [], //员工列表
       pages: {
